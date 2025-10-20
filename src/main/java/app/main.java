@@ -35,7 +35,8 @@ public class main {
                 case "3":
                     dao.darDeAltaHuesped(sc);
                     break;
-                    //modificarHuesped(sc);
+                case "4":
+                   //modificarHuesped(sc);
                     break;
                 case "5":
                     //darDeBajaHuesped(sc);

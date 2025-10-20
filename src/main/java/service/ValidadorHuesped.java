@@ -15,11 +15,18 @@ public class ValidadorHuesped {
                tipoDoc.equalsIgnoreCase("Pasaporte") ||
                tipoDoc.equalsIgnoreCase("Libreta Cívica");
     }
-
+    
     public static boolean validarNumeroDocumento(String dni) {
         return dni.matches("\\d{7,8}");
     }
-
+    
+    public static boolean validarPosicionFrenteIVA(String posicionIVA) {
+    return posicionIVA.equalsIgnoreCase("Responsable Inscripto") ||
+           posicionIVA.equalsIgnoreCase("Monotributista") ||
+           posicionIVA.equalsIgnoreCase("Exento") ||
+           posicionIVA.equalsIgnoreCase("Consumidor Final");
+    }
+    
     public static boolean validarCUIT(String cuit) {
         return cuit.matches("\\d{11}");
     }
