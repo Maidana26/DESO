@@ -27,7 +27,7 @@ public class Consola {
                 System.out.print("Número Documento: ");
                 String nroDoc = sc.nextLine();
 
-                dao.buscarHuesped(nombre, apellido, tipoDoc, nroDoc);
+                dao.buscarHuesped(nombre, apellido, tipoDoc, nroDoc, sc);
 
                 // Después de la búsqueda, mostramos el menú post-búsqueda
                 menuPostBusqueda(sc);
