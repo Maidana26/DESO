@@ -1,62 +1,69 @@
 package dao;
 
-import java.io.*;
-import models.HuespedDTO;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HuespedDAO {
-    private BufferedReader lector;
-    private String linea;
-    private String partes[] = null;
-
-    public void guardar(HuespedDTO huesped) {
-        // pendiente implementar
-    }
-
-    public void actualizar(HuespedDTO huesped) {
-        // pendiente implementar
-    }
-
-    public void eliminar(HuespedDTO huesped) {
-        // pendiente implementar
-    }
 
     public void buscarHuesped(String nombre, String apellido, String tipoDocumento, String numeroDocumento) {
-        File archivo = new File("data/ListaHuespedes.csv");
-        File archivoSalida = new File("data/huespedesEncontrados.csv");
+        String rutaLista = "data/ListaHuespedes.csv";
+        String rutaEncontrados = "data/huespedesEncontrados.csv";
+        List<String> encontrados = new ArrayList<>();
 
-        try (
-            BufferedReader lector = new BufferedReader(new FileReader(archivo));
-            BufferedWriter escritor = new BufferedWriter(new FileWriter(archivoSalida))
-        ) {
-            while ((linea = lector.readLine()) != null) {
-                partes = linea.split(",");
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaLista))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(",");
+                if (partes.length < 11) continue;
 
-                // Aseguramos que la línea tenga suficientes columnas
-                if (partes.length < 4) continue;
+                String hNombre = partes[0].trim();
+                String hApellido = partes[1].trim();
+                String hTipoDoc = partes[2].trim();
+                String hNumeroDoc = partes[3].trim();
 
-                String nom = partes[0].trim();
-                String ape = partes[1].trim();
-                String tipoDoc = partes[2].trim();
-                String numDoc = partes[3].trim();
+                // Normalizamos los parámetros
+                String nombreParam = nombre == null ? "" : nombre.trim();
+                String apellidoParam = apellido == null ? "" : apellido.trim();
+                String tipoDocParam = tipoDocumento == null ? "" : tipoDocumento.trim();
+                String numeroDocParam = numeroDocumento == null ? "" : numeroDocumento.trim();
 
                 boolean coincide =
-                    (nombre.isEmpty() || nom.equalsIgnoreCase(nombre)) &&
-                    (apellido.isEmpty() || ape.equalsIgnoreCase(apellido)) &&
-                    (tipoDocumento.isEmpty() || tipoDoc.equalsIgnoreCase(tipoDocumento)) &&
-                    (numeroDocumento.isEmpty() || numDoc.equalsIgnoreCase(numeroDocumento));
+                        (nombreParam.isEmpty() || hNombre.equalsIgnoreCase(nombreParam)) &&
+                        (apellidoParam.isEmpty() || hApellido.equalsIgnoreCase(apellidoParam)) &&
+                        (tipoDocParam.isEmpty() || hTipoDoc.equalsIgnoreCase(tipoDocParam)) &&
+                        (numeroDocParam.isEmpty() || hNumeroDoc.equalsIgnoreCase(numeroDocParam));
 
                 if (coincide) {
-                    escritor.write(linea);
-                    escritor.newLine();
-                    System.out.println(linea);
+                    encontrados.add(linea);
                 }
             }
 
-            System.out.println("\n✅ Búsqueda completada. Archivo creado en: " + archivoSalida.getAbsolutePath());
+            // Guardar resultados en huespedesEncontrados.csv
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(rutaEncontrados))) {
+                for (String l : encontrados) {
+                    bw.write(l);
+                    bw.newLine();
+                }
+            }
+
+            // Mostrar resultados por consola
+            System.out.println("\n--- RESULTADOS DE LA BÚSQUEDA ---");
+            if (encontrados.isEmpty()) {
+                System.out.println("No se encontraron huéspedes con esos criterios.");
+            } else {
+                for (String l : encontrados) {
+                    System.out.println(l);
+                }
+                System.out.println("\nBúsqueda finalizada. Resultados guardados en 'huespedesEncontrados.csv'.");
+            }
 
         } catch (IOException e) {
-            System.out.println("⚠️ Error al procesar el archivo: " + e.getMessage());
+            System.out.println("Error leyendo o escribiendo archivos: " + e.getMessage());
         }
     }
 }
-
