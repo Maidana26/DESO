@@ -17,7 +17,7 @@ public class HuespedDAO {
             String apellido = "";
             String tipoDoc = "";
             String dni = "";
-            String posIVA = "";
+            String posIVA = "Consumidor Final";
             String cuit = "";
             String telefono = "";
             String fechaNac = "";
@@ -38,12 +38,12 @@ public class HuespedDAO {
 
                 //Ingreso y verificacion de datos, tanto formato como obligatoriedad
                 System.out.println("=== Complete los siguientes campos (enter para conservar valor) ===");
-                nombre = solicitarCampoConDefault(sc, "Nombre", ValidadorHuesped::validarNombre, nombre);
-                apellido = solicitarCampoConDefault(sc, "Apellido", ValidadorHuesped::validarApellido, apellido);
-                tipoDoc = solicitarCampoConDefault(sc, "Tipo de Documento (DNI/Pasaporte/Libreta Cívica)", ValidadorHuesped::validarTipoDocumento, tipoDoc);
-                dni = solicitarCampoConDefault(sc, "DNI", ValidadorHuesped::validarNumeroDocumento, dni);
-                posIVA = solicitarCampoConDefault(sc, "Posición frente al IVA(Consumidor final por omisión)(Responsable Inscripto/Monotributista/Exento/Consumidor Final)", ValidadorHuesped::validarPosicionFrenteIVA, posIVA);
-                cuit = solicitarCampoConDefault(sc, "CUIT (no obligatorio)(11 dígitos)", ValidadorHuesped::validarCUIT, cuit);
+                nombre = solicitarCampoConDefault(sc, "Nombre ", ValidadorHuesped::validarNombre, nombre);
+                apellido = solicitarCampoConDefault(sc, "Apellido ", ValidadorHuesped::validarApellido, apellido);
+                tipoDoc = solicitarCampoConDefault(sc, "Tipo de Documento (DNI/LE/LC/Pasaporte)", ValidadorHuesped::validarTipoDocumento, tipoDoc);
+                dni = solicitarCampoConDefault(sc, "DNI (8digitos)", ValidadorHuesped::validarNumeroDocumento, dni);
+                posIVA = solicitarCampoConDefault(sc, "Posición frente al IVA, admtie (Responsable Inscripto/Monotributista/Exento/Consumidor Final), CF por omisión)", ValidadorHuesped::validarPosicionFrenteIVA, posIVA);
+                cuit = solicitarCampoConDefault(sc, "CUIT (11 dígitos) (no obligatorio)", ValidadorHuesped::validarCUIT, cuit);
                 telefono = solicitarCampoConDefault(sc, "Teléfono", ValidadorHuesped::validarTelefono, telefono);
                 fechaNac = solicitarCampoConDefault(sc, "Fecha de nacimiento (dd/mm/aaaa)", ValidadorHuesped::validarFecha, fechaNac);
                 email = solicitarCampoConDefault(sc, "Email(no obligatorio)", ValidadorHuesped::validarEmail, email);
@@ -174,9 +174,6 @@ public class HuespedDAO {
                 valor = valorActual;
             }
             valido = validador.validar(valor);
-            if (!valido) {
-                System.out.println("⚠️ Valor inválido. Intente nuevamente.");
-            }
         } while (!valido);
         return valor;
     }
