@@ -12,6 +12,6 @@ public class HotelApp {
         var gestor = new GestorAutenticacion(dao);
         var ui = new LoginUI(gestor);
 
-        ui.mostrarPantallaLogin();
+        System.out.println(ui.mostrarPantallaLogin());
     }
 }

@@ -1,7 +1,9 @@
 package service;
 
 import dao.ConserjeDAO;
-import exceptions.ExcepcionAutenticacion;
+import exceptions.ContrasenaIncorrectaException;
+import exceptions.UsuarioNoEncontradoException;
+import exceptions.AmbosIncorrectosException;
 import models.Conserje;
 
 public class GestorAutenticacion {
@@ -11,22 +13,39 @@ public class GestorAutenticacion {
         this.conserjeDAO = conserjeDAO;
     }
 
-    public boolean autenticar(String usuario, String contrasena) throws ExcepcionAutenticacion {
-    if (usuario == null || contrasena == null || usuario.isBlank() || contrasena.isBlank()) {
-        throw new ExcepcionAutenticacion("Debe ingresar usuario y contraseña.");
-    }
+    public boolean autenticar(String usuario, String contrasena)
+            throws UsuarioNoEncontradoException, ContrasenaIncorrectaException, AmbosIncorrectosException {
 
-    var conserje = conserjeDAO.findByUsuario(usuario.trim())
-            .orElseThrow(() -> new ExcepcionAutenticacion("Usuario no encontrado."));
+        // Validaciones básicas
+        if (usuario == null || usuario.isBlank() || contrasena == null || contrasena.isBlank()) {
+            throw new AmbosIncorrectosException();
+        }
 
-    String contrasenaIngresada = contrasena.trim();
-    String contrasenaGuardada = conserje.getContrasena().trim();
+        String usuarioTrim = usuario.trim();
+        String contrasenaTrim = contrasena.trim();
 
-    if (!conserje.getUsuario().equalsIgnoreCase(usuario.trim()) ||
-        !contrasenaGuardada.equals(contrasenaIngresada)) {
-        throw new ExcepcionAutenticacion("El usuario o la contraseña no son válidos.");
-    }
+        // Busco el usuario en el archivo CSV
+        var optionalConserje = conserjeDAO.findByUsuario(usuarioTrim);
 
-    return true;
+        if (optionalConserje.isEmpty()) {
+            // Si el usuario no existe, verifico si la contraseña pertenece a alguien más
+            boolean existeContrasena = conserjeDAO.existeContrasena(contrasenaTrim);
+            if (existeContrasena) {
+                // La contraseña pertenece a un usuario válido, pero el nombre no existe
+                throw new UsuarioNoEncontradoException(usuarioTrim);
+            } else {
+                // Ni el usuario ni la contraseña son válidos
+                throw new AmbosIncorrectosException();
+            }
+        }
+
+        // El usuario existe → verifico la contraseña
+        Conserje conserje = optionalConserje.get();
+        if (!conserje.getContrasena().trim().equals(contrasenaTrim)) {
+            throw new ContrasenaIncorrectaException();
+        }
+
+        // Usuario y contraseña correctos
+        return true;
     }
 }

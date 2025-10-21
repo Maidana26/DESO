@@ -2,9 +2,10 @@ package ui;
 
 import service.GestorAutenticacion;
 import util.LectorContrasena;
-import util.ValidarContrasena;
-import exceptions.ExcepcionAutenticacion;
-import exceptions.ExcepcionValidacion;
+// import util.ValidarContrasena;  // 🔸 Bloque de validación desactivado
+import exceptions.UsuarioNoEncontradoException;
+import exceptions.ContrasenaIncorrectaException;
+import exceptions.AmbosIncorrectosException;
 import java.util.Scanner;
 
 public class LoginUI {
@@ -15,7 +16,7 @@ public class LoginUI {
         this.gestor = gestor;
     }
 
-    public void mostrarPantallaLogin() {
+    public boolean mostrarPantallaLogin() {
         final int MAX_INTENTOS = 3;
         int intentos = 0;
         boolean autenticado = false;
@@ -26,24 +27,40 @@ public class LoginUI {
             String contrasena = LectorContrasena.leerContrasena("Contraseña: ");
 
             try {
-                // Valido formato antes de autenticar
+                /*
+                // 🔸 VALIDACIÓN DE FORMATO DE CONTRASEÑA (DESACTIVADA POR AHORA)
                 if (!ValidarContrasena.esValido(contrasena)) {
-                    throw new ExcepcionValidacion(ValidarContrasena.rules());
+                    System.out.println("Error de formato: " + ValidarContrasena.rules());
+                    continue; // no cuenta como intento fallido
                 }
+                */
 
+                // 🔹 Autenticación principal
                 if (gestor.autenticar(usuario, contrasena)) {
-                    System.out.println("Inicio de sesión exitoso. Bienvenido, " + usuario + "!");
+                    System.out.println("Inicio de sesión exitoso. ¡Bienvenido, " + usuario + "!");
                     autenticado = true;
                 }
 
-            } catch (ExcepcionValidacion | ExcepcionAutenticacion e) {
+            } catch (UsuarioNoEncontradoException e) {
                 intentos++;
                 System.out.println(e.getMessage());
                 System.out.println("Intento " + intentos + " de " + MAX_INTENTOS + ".");
-                if (intentos == MAX_INTENTOS) {
-                    System.out.println("Se alcanzó el número máximo de intentos.");
-                }
+
+            } catch (ContrasenaIncorrectaException e) {
+                intentos++;
+                System.out.println(e.getMessage());
+                System.out.println("Intento " + intentos + " de " + MAX_INTENTOS + ".");
+
+            } catch (AmbosIncorrectosException e) {
+                intentos++;
+                System.out.println(e.getMessage());
+                System.out.println("Intento " + intentos + " de " + MAX_INTENTOS + ".");
+            }
+
+            if (intentos == MAX_INTENTOS && !autenticado) {
+                System.out.println("Se alcanzó el número máximo de intentos. El acceso fue bloqueado.");
             }
         }
+        return autenticado;
     }
 }
