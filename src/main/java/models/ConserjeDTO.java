@@ -1,11 +1,11 @@
 package models;
 
-public class Conserje {
+public class ConserjeDTO {
     private String usuario;
     private String contrasena;
     
     //constructor
-    public Conserje(String usuario, String contrasena){
+    public ConserjeDTO(String usuario, String contrasena){
         this.usuario = usuario;
         this.contrasena = contrasena;
     }

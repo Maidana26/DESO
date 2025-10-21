@@ -3,8 +3,9 @@ package ui;
 import dao.HuespedDAO;
 import java.util.Scanner;
 
-public class Consola {
-    public static void main(String[] args) {
+public class BusquedaUI {
+
+    public static void menuBusquedaHuesped() {
         Scanner sc = new Scanner(System.in);
         HuespedDAO dao = new HuespedDAO();
         int opcion;

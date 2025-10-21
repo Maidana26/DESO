@@ -45,8 +45,8 @@ public class HuespedDTO {
     public String toString() {
         // formato exacto para guardar en CSV
         String fechaStr = (fecha != null) ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(fecha) : "";
-        return nombre + ";" + apellido + ";" + tipoDeDocumento + ";" + numeroDocumento + ";" +
-               posicionFrenteIVA + ";" + cuit + ";" + telefono + ";" + fechaStr + ";" +
-               email + ";" + ocupacion + ";" + nacionalidad;
+        return nombre + "," + apellido + "," + tipoDeDocumento + "," + numeroDocumento + "," +
+               posicionFrenteIVA + "," + cuit + "," + telefono + "," + fechaStr + "," +
+               email + "," + ocupacion + "," + nacionalidad;
     }
 }
