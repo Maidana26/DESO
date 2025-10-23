@@ -63,7 +63,7 @@ public class ValidadorHuesped {
     }
     
     public static boolean validarCUIT(String cuit) {
-        if(cuit.matches("\\d{11}"))return true;
+        if(cuit.trim().isEmpty() || cuit.matches("\\d{11}"))return true;
         else {
             System.out.println("❌ Ingrese un cuit de 11 digitos");
             return false;

@@ -1,18 +1,11 @@
 package dao;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import models.HuespedDTO;
-import models.DireccionDTO;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import models.*;
+import java.util.*;
 
 public class FileHuespedDAO implements HuespedDAO {
-    private static final String RUTA_ARCHIVO = "C:\\Users\\lucab\\Documents\\NetBeansProjects\\DESO\\src\\main\\java\\data\\ListaHuespedes.csv";
+    private static final String RUTA_ARCHIVO = "data/ListaHuespedes.csv";
     
     @Override
     public void guardarOHuespedReemplazando(HuespedDTO nuevoHuesped) {
@@ -32,7 +25,7 @@ public class FileHuespedDAO implements HuespedDAO {
                 }
             }
         } catch (IOException e) {
-            System.out.println("⚠️ No se pudo leer el archivo, se creará uno nuevo.");
+            System.out.println(" No se pudo leer el archivo, se creará uno nuevo.");
         }
 
         // Si no se reemplazó, agregamos el huésped nuevo al final
@@ -44,9 +37,9 @@ public class FileHuespedDAO implements HuespedDAO {
             for (String l : lineas) {
                 pw.println(l);
             }
-            System.out.println(reemplazado ? "🔁 Huésped actualizado." : "✅ Huésped agregado.");
+            System.out.println(reemplazado ? " Huésped actualizado." : " Huésped agregado.");
         } catch (IOException e) {
-            System.err.println("❌ Error al escribir el archivo: " + e.getMessage());
+            System.err.println(" Error al escribir el archivo: " + e.getMessage());
         }
     }
     
@@ -92,7 +85,7 @@ public class FileHuespedDAO implements HuespedDAO {
                 }
             }
         } catch (IOException e) {
-            System.out.println("❌ Error al leer el archivo CSV: " + e.getMessage());
+            System.out.println(" Error al leer el archivo CSV: " + e.getMessage());
         }
         return null; // no se encontró
     }

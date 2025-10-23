@@ -21,12 +21,13 @@ import ui.*;
 import dao.*;
 import java.nio.file.Paths;
 import service.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
+        Scanner sc = new Scanner(System.in);
+        DarDeAltaHuespedUI a = new DarDeAltaHuespedUI();
+        
         var path = Paths.get("data/conserjes.csv"); // ruta relativa
         var dao = new ArchivoConserjeDAO(path);
         var gestor = new GestorAutenticacion(dao);
@@ -47,9 +48,10 @@ public class Main {
                 System.out.println("4. Salir");
                 System.out.print("Seleccione una opcion: ");
 
-                opcion = Integer.parseInt(scanner.nextLine());
+                opcion = Integer.parseInt(sc.nextLine());
 
                 switch (opcion) {
+                    case 1 -> a.darDeAltaHuespedUI(sc);
                     case 3 -> BusquedaUI.menuBusquedaHuesped();
                     case 4 -> System.out.println("Saliendo del sistema...");
                     default -> System.out.println("Opcion invalida, intente nuevamente.");
@@ -57,7 +59,7 @@ public class Main {
 
             } while (opcion != 4);
 
-            scanner.close();
+            sc.close();
         }else{
             System.out.println("jajajajaja no entraste bobo");
         }

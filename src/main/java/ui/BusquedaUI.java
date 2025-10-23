@@ -1,13 +1,15 @@
 package ui;
 
-import dao.HuespedDAO;
+import dao.*;
+import service.*;
 import java.util.Scanner;
 
 public class BusquedaUI {
 
     public static void menuBusquedaHuesped() {
         Scanner sc = new Scanner(System.in);
-        HuespedDAO dao = new HuespedDAO();
+        HuespedDAO dao = new FileHuespedDAO();
+        GestorHuesped gh = new GestorHuesped(dao);
         int opcion;
 
         do {
@@ -28,7 +30,7 @@ public class BusquedaUI {
                 System.out.print("Número Documento: ");
                 String nroDoc = sc.nextLine();
 
-                dao.buscarHuesped(nombre, apellido, tipoDoc, nroDoc, sc);
+                gh.buscarHuesped(nombre, apellido, tipoDoc, nroDoc, sc);
 
                 // Después de la búsqueda, mostramos el menú post-búsqueda
                 menuPostBusqueda(sc);
