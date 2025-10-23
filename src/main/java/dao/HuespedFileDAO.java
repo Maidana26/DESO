@@ -1,4 +1,4 @@
-package service;
+package dao;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,10 +11,16 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class manipularCSV {
-
-    private static final String RUTA_ARCHIVO = "C:\\Users\\lucab\\Documents\\NetBeansProjects\\DESO\\src\\main\\java\\data\\ListaHuespedes.csv";
-    public static void guardarOHuespedReemplazando(HuespedDTO nuevoHuesped) {
+public class HuespedFileDAO implements HuespedDAO {
+    
+    public void HuespedFileDAO(){
+        
+    }
+    
+    private static final String RUTA_ARCHIVO = "data/ListaHuespedes.csv";
+    
+    @Override
+    public void guardarOReemplazarHuesped(HuespedDTO nuevoHuesped) {
         List<String> lineas = new ArrayList<>();
         boolean reemplazado = false;
 
@@ -24,7 +30,7 @@ public class manipularCSV {
                 String[] campos = linea.split(",");
                 if (campos.length > 3 && campos[3].equals(nuevoHuesped.getNumeroDocumento())) {
                     // Reemplazamos la línea por el nuevo huésped
-                    lineas.add(convertirAHuespedCSV(nuevoHuesped));
+                    lineas.add(convertirHuespedCSV(nuevoHuesped));
                     reemplazado = true;
                 } else {
                     lineas.add(linea);
@@ -36,7 +42,7 @@ public class manipularCSV {
 
         // Si no se reemplazó, agregamos el huésped nuevo al final
         if (!reemplazado) {
-            lineas.add(convertirAHuespedCSV(nuevoHuesped));
+            lineas.add(convertirHuespedCSV(nuevoHuesped));
         }
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(RUTA_ARCHIVO))) {
@@ -48,33 +54,9 @@ public class manipularCSV {
             System.err.println("❌ Error al escribir el archivo: " + e.getMessage());
         }
     }
-
-    private static String convertirAHuespedCSV(HuespedDTO h) {
-        return String.join(",",
-            h.getNombre(),
-            h.getApellido(),
-            h.getTipoDeDocumento(),
-            h.getNumeroDocumento(),
-            h.getPosicionFrenteIVA(),
-            h.getCuit(),
-            h.getTelefono(),
-            h.getFechaNacimiento(),
-            h.getEmail(),
-            h.getOcupacion(),
-            h.getNacionalidad(),
-            h.getDireccion().getCalle(),
-            h.getDireccion().getNumero(),
-            h.getDireccion().getDepartamento(),
-            h.getDireccion().getPiso(),
-            h.getDireccion().getCodigoPostal(),
-            h.getDireccion().getLocalidad(),
-            h.getDireccion().getProvincia(),
-            h.getDireccion().getPais()
-        );
-    }
     
     // ✅ Busca un huésped por DNI y devuelve su instancia, o null si no existe
-    public static HuespedDTO buscarHuespedPorDni(String dniBuscado) {
+    public HuespedDTO buscarHuespedPorDni(String dniBuscado) {
         try (BufferedReader br = new BufferedReader(new FileReader(RUTA_ARCHIVO))) {
             String linea;
             while ((linea = br.readLine()) != null) {
@@ -117,5 +99,30 @@ public class manipularCSV {
             System.out.println("❌ Error al leer el archivo CSV: " + e.getMessage());
         }
         return null; // no se encontró
+    }
+    
+    @Override
+    public String convertirHuespedCSV(HuespedDTO h) {
+        return String.join(",",
+            h.getNombre(),
+            h.getApellido(),
+            h.getTipoDeDocumento(),
+            h.getNumeroDocumento(),
+            h.getPosicionFrenteIVA(),
+            h.getCuit(),
+            h.getTelefono(),
+            h.getFechaNacimiento(),
+            h.getEmail(),
+            h.getOcupacion(),
+            h.getNacionalidad(),
+            h.getDireccion().getCalle(),
+            h.getDireccion().getNumero(),
+            h.getDireccion().getDepartamento(),
+            h.getDireccion().getPiso(),
+            h.getDireccion().getCodigoPostal(),
+            h.getDireccion().getLocalidad(),
+            h.getDireccion().getProvincia(),
+            h.getDireccion().getPais()
+        );
     }
 }

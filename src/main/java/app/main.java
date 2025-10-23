@@ -1,13 +1,13 @@
 package app;
 
 import java.util.Scanner;
-import dao.HuespedDAO;
+import ui.DarDeAltaHuespedUI;
 
 public class main {
 
     public static void main(String[] args) {
-        HuespedDAO dao = new HuespedDAO();
         Scanner sc = new Scanner(System.in);
+        DarDeAltaHuespedUI a = new DarDeAltaHuespedUI();
         boolean salir = false;
 
         System.out.println("==========================================");
@@ -33,7 +33,7 @@ public class main {
                     //buscarHuesped(sc);
                     break;
                 case "3":
-                    dao.darDeAltaHuesped(sc);
+                    a.darDeAltaHuespedUI(sc);
                     break;
                 case "4":
                    //modificarHuesped(sc);

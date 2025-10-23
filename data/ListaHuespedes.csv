@@ -1,4 +1,3 @@
-nombre,apellido,tipoDeDocumento,numeroDocumento,posicionFrenteIVA,cuit,telefono,fechaNacimiento,email,ocupacion,nacionalidad,calle,numero,departamento,piso,codigoPostal,localidad,provincia,pais
 María,López,DNI,28374659,Consumidor Final,,1145678923,15/04/1987,maria.lopez@gmail.com,Docente,Argentina,Avenida Corrientes,1520,,,"1043",CABA,Buenos Aires,Argentina
 Juan,Pérez,LE,18765432,Responsable Inscripto,20-18765432-3,1123345566,22/11/1975,juanperez@hotmail.com,Contador,Argentina,Calle San Martín,450,Depto B,3,"5000",Córdoba,Córdoba,Argentina
 Lucía,Gómez,Pasaporte,98765432,Monotributista,,5493516789012,02/09/1992,lucia.gomez@yahoo.com,Freelancer,Argentina,Belgrano,2345,,,"7600",Mar del Plata,Buenos Aires,Argentina
