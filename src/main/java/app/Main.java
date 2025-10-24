@@ -33,7 +33,12 @@ public class Main {
         var gestor = new GestorAutenticacion(dao);
         var LoginUI = new LoginUI(gestor);
         var BusquedaUI = new BusquedaUI();
-
+        
+        var huespedDAO = new FileHuespedDAO();
+        var gestorHuesped = new GestorHuesped(huespedDAO);
+        var ui = new BajaHuespedUI(gestorHuesped);
+        
+        
         // ---- FLUJO PRINCIPAL ----
         System.out.println("=== SISTEMA DE GESTION HOTELERA ===");
 
@@ -52,6 +57,7 @@ public class Main {
 
                 switch (opcion) {
                     case 1 -> a.darDeAltaHuespedUI(sc);
+                    case 2 -> ui.mostrarPantallaBaja();
                     case 3 -> BusquedaUI.menuBusquedaHuesped();
                     case 4 -> System.out.println("Saliendo del sistema...");
                     default -> System.out.println("Opcion invalida, intente nuevamente.");

@@ -1,33 +1,34 @@
 package util;
-
+/*
 import java.io.IOException;
 import java.io.Console;
 import java.util.Arrays;
 import javax.swing.JPasswordField;
 import javax.swing.JOptionPane;
+*/
+
+import java.io.Console;
+import java.util.Scanner;
 
 public class LectorContrasena {
 
     public static String leerContrasena(String prompt) {
-    Console console = System.console();
-    if (console != null) {
-        char[] ch = console.readPassword(prompt);
-        String pwd = new String(ch);
-        Arrays.fill(ch, ' ');
-        return pwd;
-    } else {
-        // fallback GUI en NetBeans
-        JPasswordField field = new JPasswordField();
-        Object[] msg = { prompt, field };
-        int option = JOptionPane.showConfirmDialog(null, msg, "Ingrese contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (option == JOptionPane.OK_OPTION) {
-            return new String(field.getPassword());
+        Console console = System.console();
+
+        if (console != null) {
+            // Consola real: oculta los caracteres
+            char[] pwd = console.readPassword(prompt);
+            String password = new String(pwd);
+            java.util.Arrays.fill(pwd, ' '); // limpiar arreglo
+            return password;
         } else {
-            return null;
+            // IDE (NetBeans, Eclipse): usamos Scanner
+            System.out.print(prompt);
+            Scanner sc = new Scanner(System.in);
+            return sc.nextLine();
         }
     }
-}
-
+    /*
     // Fallback: leer caracter por caracter y mostrar *
     private static String leerContrasenaAsteriscos(String prompt) {
         System.out.print(prompt);
@@ -52,4 +53,5 @@ public class LectorContrasena {
         System.out.println();
         return password.toString();
     }
+*/
 }

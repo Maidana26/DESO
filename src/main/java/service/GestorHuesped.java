@@ -4,6 +4,7 @@ import dao.*;
 import java.io.*;
 import java.util.*;
 import models.*;
+import exceptions.ExcepcionHuesped;
 
 
 import java.util.Scanner;
@@ -65,9 +66,9 @@ public class GestorHuesped {
         String codigoPostal,
         String localidad,
         String provincia,
-        String pais){
+        String pais, boolean alojado){
             DireccionDTO nueva_direccion = new DireccionDTO(calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais);
-            HuespedDTO nuevo_huesped = new HuespedDTO(nombre, apellido, tipoDeDocumento, numeroDocumento, posicionFrenteIVA, cuit, telefono, fechaNacimiento, email, ocupacion, nacionalidad, nueva_direccion);
+            HuespedDTO nuevo_huesped = new HuespedDTO(nombre, apellido, tipoDeDocumento, numeroDocumento, posicionFrenteIVA, cuit, telefono, fechaNacimiento, email, ocupacion, nacionalidad, nueva_direccion, alojado);
             hDAO.guardarOHuespedReemplazando(nuevo_huesped);
     }
 
@@ -139,6 +140,16 @@ public class GestorHuesped {
             System.out.println("Error leyendo o escribiendo archivos: " + e.getMessage());
         }
     }
+    
+    public HuespedDTO buscarHuesped(String nroDoc) throws ExcepcionHuesped {
+    HuespedDTO h = hDAO.buscarHuespedPorDni(nroDoc);
+    if (h == null) {
+        throw new ExcepcionHuesped("El huésped no existe en el sistema.");
+    }
+    return h;
+}
+
+
 
     public void modificarHuesped(int numeroLinea, Scanner sc) {
         String rutaLista = "data/ListaHuespedes.csv";
@@ -244,5 +255,13 @@ public class GestorHuesped {
             System.out.println("Error modificando el huésped: " + e.getMessage());
         }
     }
-    
+     public void darBajaHuesped(String tipoDoc, String nroDoc) throws ExcepcionHuesped {
+        var huesped = buscarHuespedPorDni(nroDoc);
+
+        if (huesped.getAlojadoAlgunaVez()) {
+            throw new ExcepcionHuesped("El huésped no puede ser eliminado pues se ha alojado en el hotel en alguna oportunidad.");
+        }
+
+        huespedDAO.eliminar(huesped);
+    }
 }

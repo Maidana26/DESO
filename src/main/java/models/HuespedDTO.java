@@ -14,14 +14,15 @@ public class HuespedDTO {
     private String ocupacion;
     private String nacionalidad;
     private DireccionDTO direccion;
-
+    private boolean alojadoAlgunaVez;
+    
     // Constructor vacío
     public HuespedDTO() {}
 
     // Constructor completo (opcional)
     public HuespedDTO(String nombre, String apellido, String tipoDeDocumento, String numeroDocumento,
                       String posicionFrenteIVA, String cuit, String telefono, String fechaNacimiento,
-                      String email, String ocupacion, String nacionalidad, DireccionDTO direccion) {
+                      String email, String ocupacion, String nacionalidad, DireccionDTO direccion, boolean alojadoAlgunaVez) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDeDocumento = tipoDeDocumento;
@@ -34,6 +35,7 @@ public class HuespedDTO {
         this.ocupacion = ocupacion;
         this.nacionalidad = nacionalidad;
         this.direccion = direccion;
+        this.alojadoAlgunaVez = alojadoAlgunaVez;
     }
 
     // =============================
@@ -135,6 +137,12 @@ public class HuespedDTO {
     public void setDireccion(DireccionDTO direccion) {
         this.direccion = direccion;
     }
+    public void setAlojadoAlgunaVez(boolean al){
+        this.alojadoAlgunaVez = al;
+    }
+    public boolean getAlojadoAlgunaVez() {
+        return alojadoAlgunaVez;
+    }
     // =============================
     // Método toString (útil para debug)
     // =============================
@@ -160,6 +168,7 @@ public class HuespedDTO {
                 ", localidad='" + direccion.getLocalidad() + '\'' +
                 ", provincia='" + direccion.getProvincia() + '\'' +
                 ", pais='" + direccion.getPais() + '\'' +
+                (alojadoAlgunaVez ? "1" : "0") +
                 '}';
     }
 }

@@ -34,7 +34,8 @@ public class DarDeAltaHuespedUI {
             String localidad = "";
             String provincia = "";
             String pais = "";
-
+            boolean alojado = false;
+            
             boolean terminarAlta = false;
             while (!terminarAlta) {
                 
@@ -89,7 +90,7 @@ public class DarDeAltaHuespedUI {
                                         case "1": {
                                             // Reemplazar/guardar y preguntar si quiere cargar otro
                                             gh.DarDeAltaHuesped(nombre, apellido, tipoDeDocumento, numeroDocumento, posicionFrenteIVA, cuit, telefono, fechaNacimiento, email, ocupacion, nacionalidad,
-                                            calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais);
+                                            calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais,alojado);
                                             enSubmenu = false;
                                             terminarAlta = true;
                                             cargar_otro = preguntarCargarOtro(sc);
@@ -110,7 +111,7 @@ public class DarDeAltaHuespedUI {
                             } else {
                                 // No existe: guardar
                                 gh.DarDeAltaHuesped(nombre, apellido, tipoDeDocumento, numeroDocumento, posicionFrenteIVA, cuit, telefono, fechaNacimiento, email, ocupacion, nacionalidad,
-                                calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais);
+                                calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais,alojado);
                                 enSubmenu = false;
                                 terminarAlta = true;
                                 cargar_otro = preguntarCargarOtro(sc);
