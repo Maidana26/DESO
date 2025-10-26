@@ -10,19 +10,31 @@ import javax.swing.JOptionPane;
 import java.io.Console;
 import java.util.Scanner;
 
+/**
+ * Utilidad para leer contraseñas desde la entrada estándar.
+ * 
+ * Proporciona compatibilidad con:
+ * - Consola real (oculta los caracteres mientras se escribe)
+ * - IDEs como NetBeans o Eclipse (donde la consola no soporta ocultar caracteres)
+ */
 public class LectorContrasena {
 
+    /**
+     * Solicita una contraseña al usuario.
+     * 
+     * @param prompt Mensaje que se muestra al usuario
+     * @return La contraseña ingresada como String
+     */
     public static String leerContrasena(String prompt) {
         Console console = System.console();
 
         if (console != null) {
-            // Consola real: oculta los caracteres
+            // Consola real: deberia de ocultar los caracteres
             char[] pwd = console.readPassword(prompt);
             String password = new String(pwd);
-            java.util.Arrays.fill(pwd, ' '); // limpiar arreglo
+            java.util.Arrays.fill(pwd, ' '); // limpio arreglo
             return password;
         } else {
-            // IDE (NetBeans, Eclipse): usamos Scanner
             System.out.print(prompt);
             Scanner sc = new Scanner(System.in);
             return sc.nextLine();

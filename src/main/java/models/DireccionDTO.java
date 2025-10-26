@@ -1,5 +1,11 @@
 package models;
 
+/**
+ * Representa una dirección física asociada a un huésped.
+ *
+ * <p>Contiene información detallada como calle, número, departamento,
+ * piso, código postal, localidad, provincia y país.</p>
+ */
 public class DireccionDTO {
     
     // Atributos
@@ -12,11 +18,24 @@ public class DireccionDTO {
     public String provincia;
     public String pais;
     
-    // Constructor vacío
+    /**
+     * Constructor vacío utilizado para crear una dirección sin valores iniciales.
+     */
     public DireccionDTO() {
     }
 
-    // Constructor completo
+    /**
+     * Crea una nueva dirección con todos los campos especificados.
+     *
+     * @param calle nombre de la calle.
+     * @param numero número de la vivienda.
+     * @param departamento identificación del departamento.
+     * @param piso piso en el edificio.
+     * @param codigoPostal código postal de la zona.
+     * @param localidad localidad o ciudad.
+     * @param provincia provincia de residencia.
+     * @param pais país de residencia.
+     */
     public DireccionDTO(String calle, String numero, String departamento, String piso, 
                         String codigoPostal, String localidad, String provincia, String pais) {
         this.calle = calle;
@@ -30,71 +49,35 @@ public class DireccionDTO {
     }
 
     // Getters y Setters
-    public String getCalle() {
-        return calle;
-    }
+    public String getCalle() {return calle;}
+    public void setCalle(String calle) {this.calle = calle;}
 
-    public void setCalle(String calle) {
-        this.calle = calle;
-    }
+    public String getNumero() {return numero;}
+    public void setNumero(String numero) {this.numero = numero;}
 
-    public String getNumero() {
-        return numero;
-    }
+    public String getDepartamento() {return departamento;}
+    public void setDepartamento(String departamento) {this.departamento = departamento;}
 
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
+    public String getPiso() {return piso;}
+    public void setPiso(String piso) {this.piso = piso;}
 
-    public String getDepartamento() {
-        return departamento;
-    }
+    public String getCodigoPostal() {return codigoPostal;}
+    public void setCodigoPostal(String codigoPostal) {this.codigoPostal = codigoPostal;}
 
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
-    }
+    public String getLocalidad() {return localidad;}
+    public void setLocalidad(String localidad) {this.localidad = localidad;}
 
-    public String getPiso() {
-        return piso;
-    }
+    public String getProvincia() {return provincia;}
+    public void setProvincia(String provincia) {this.provincia = provincia;}
 
-    public void setPiso(String piso) {
-        this.piso = piso;
-    }
+    public String getPais() {return pais;}
+    public void setPais(String pais) {this.pais = pais;}
 
-    public String getCodigoPostal() {
-        return codigoPostal;
-    }
-
-    public void setCodigoPostal(String codigoPostal) {
-        this.codigoPostal = codigoPostal;
-    }
-
-    public String getLocalidad() {
-        return localidad;
-    }
-
-    public void setLocalidad(String localidad) {
-        this.localidad = localidad;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
-    }
-
-    public String getPais() {
-        return pais;
-    }
-
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
-
-    // Representación en texto (útil para depurar)
+    /**
+     * Devuelve una representación en texto de la dirección.
+     *
+     * @return los datos de la dirección formateados.
+     */
     @Override
     public String toString() {
         return "DireccionDTO{" +
@@ -109,7 +92,11 @@ public class DireccionDTO {
                 '}';
     }
 
-    // Método opcional para exportar a CSV
+    /**
+     * Convierte los datos de la dirección a formato CSV.
+     *
+     * @return una cadena de texto con los valores separados por comas.
+     */
     public String toCSV() {
         return String.join(",", 
                 calle, numero, departamento, piso, 

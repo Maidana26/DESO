@@ -6,13 +6,33 @@ import exceptions.UsuarioNoEncontradoException;
 import exceptions.AmbosIncorrectosException;
 import models.ConserjeDTO;
 
+/**
+ * GestorAutenticacion se encarga de manejar la lógica de autenticación
+ * de los conserjes del sistema. Se comunica con el DAO para validar
+ * usuarios y contraseñas, lanzando excepciones específicas según el error.
+ */
 public class GestorAutenticacion {
+    // DAO para acceder a la información de los conserjes
     private final ConserjeDAO conserjeDAO;
 
+    /**
+     * Constructor que recibe el DAO de conserjes.
+     * @param conserjeDAO objeto que permite acceder a los datos de los conserjes
+     */
     public GestorAutenticacion(ConserjeDAO conserjeDAO) {
         this.conserjeDAO = conserjeDAO;
     }
 
+     /**
+     * Método que autentica un usuario verificando su nombre y contraseña.
+     *
+     * @param usuario nombre del usuario a autenticar
+     * @param contrasena contraseña proporcionada por el usuario
+     * @return true si la autenticación fue exitosa
+     * @throws UsuarioNoEncontradoException si el usuario no existe en el sistema
+     * @throws ContrasenaIncorrectaException si la contraseña no coincide
+     * @throws AmbosIncorrectosException si ambos, usuario y contraseña, son inválidos o vacíos
+     */
     public boolean autenticar(String usuario, String contrasena)
             throws UsuarioNoEncontradoException, ContrasenaIncorrectaException, AmbosIncorrectosException {
 
@@ -24,7 +44,7 @@ public class GestorAutenticacion {
         String usuarioTrim = usuario.trim();
         String contrasenaTrim = contrasena.trim();
 
-        // Busco el usuario en el archivo CSV
+        // Busco el usuario en el DAO
         var optionalConserje = conserjeDAO.findByUsuario(usuarioTrim);
 
         if (optionalConserje.isEmpty()) {

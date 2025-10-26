@@ -6,15 +6,29 @@ import models.*;
 import dao.*;
 import service.*;
 
+/**
+ * Interfaz de usuario para dar de alta huéspedes en el sistema.
+ * Permite ingresar datos personales y de dirección, validar campos,
+ * manejar duplicados y confirmar el alta.
+ */
 public class DarDeAltaHuespedUI {
-    
+    // DAO basado en archivos CSV
     HuespedDAO dao = new FileHuespedDAO();
+    // Gestor que maneja la lógica de negocio
     GestorHuesped gh = new GestorHuesped(dao);
     
-    
+     /**
+     * Muestra el formulario de alta de huésped.
+     * Permite ingresar campos obligatorios y opcionales, validar valores,
+     * manejar duplicados y decidir si se quiere cargar otro huésped.
+     *
+     * @param sc Scanner para leer la entrada del usuario
+     */
     public void darDeAltaHuespedUI(Scanner sc) {
         boolean cargar_otro = true;
+        
         while(cargar_otro){
+            // Inicializamos variables con valores vacíos o por defecto
             String nombre = "";
             String apellido = "";
             String tipoDeDocumento = "";
@@ -34,7 +48,7 @@ public class DarDeAltaHuespedUI {
             String localidad = "";
             String provincia = "";
             String pais = "";
-            boolean alojado = false;
+            boolean alojado = true;
             
             boolean terminarAlta = false;
             while (!terminarAlta) {
@@ -152,6 +166,12 @@ public class DarDeAltaHuespedUI {
         } //while cargar otro
     }
     
+    /**
+     * Pregunta al usuario si desea cargar otro huésped, volver al menú principal o salir del sistema.
+     *
+     * @param sc Scanner para leer la entrada del usuario
+     * @return true si desea cargar otro huésped, false si vuelve al menú principal
+     */
     public static boolean preguntarCargarOtro(Scanner sc) {
         while (true) {
             System.out.println("\n¿Qué desea hacer ahora?");

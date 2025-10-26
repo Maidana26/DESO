@@ -5,24 +5,46 @@ import java.io.*;
 import java.util.*;
 import models.*;
 import exceptions.ExcepcionHuesped;
-
-
 import java.util.Scanner;
 
+/**
+ * GestorHuesped se encarga de manejar la lógica relacionada con
+ * los huéspedes: alta, modificación, búsqueda y baja.
+ * Interactúa con el DAO correspondiente y con archivos CSV
+ * para persistencia de datos.
+ */
 public class GestorHuesped {
+    // DAO de huéspedes para operaciones persistentes
     private HuespedDAO hDAO;
+    // DAO basado en archivos para operaciones adicionales
     private FileHuespedDAO huespedDAO = new FileHuespedDAO();
 
+    /**
+     * Constructor que recibe un DAO de huéspedes.
+     * @param dao objeto HuespedDAO para persistencia
+     */
     public GestorHuesped(HuespedDAO dao) {
         this.hDAO = dao;
     }
     
+    /**
+     * Interfaz funcional para validar campos ingresados por el usuario.
+     */
     @FunctionalInterface
     public interface Validador {
         boolean validar(String valor);
     }
 
-        
+    /**
+     * Solicita un valor al usuario, mostrando un valor por defecto si existe.
+     * Permite validar el ingreso mediante un validador.
+     *
+     * @param sc Scanner para leer datos desde consola
+     * @param etiqueta etiqueta que se muestra al usuario
+     * @param validador función para validar el valor ingresado
+     * @param valorActual valor por defecto que se conserva si el usuario deja vacío
+     * @return valor ingresado o valorActual si se dejó vacío
+     */ 
     public String solicitarCampoConDefault(Scanner sc, String etiqueta, 
         Validador validador, String valorActual) {
         String prompt = (valorActual == null || valorActual.isEmpty())
@@ -43,35 +65,58 @@ public class GestorHuesped {
         return valor;
     }
 
-        
+    /**
+     * Busca un huésped por su DNI utilizando el DAO.
+     * @param dniBuscado DNI del huésped a buscar
+     * @return objeto HuespedDTO encontrado, o null si no existe
+     */
     public HuespedDTO buscarHuespedPorDni(String dniBuscado) {
         return hDAO.buscarHuespedPorDni(dniBuscado);
     }
-
-    public void DarDeAltaHuesped(String nombre,
-        String apellido,
-        String tipoDeDocumento,
-        String numeroDocumento,
-        String posicionFrenteIVA,
-        String cuit,
-        String telefono,
-        String fechaNacimiento,
-        String email,
-        String ocupacion,
-        String nacionalidad,
-        String calle,
-        String numero,
-        String departamento,
-        String piso,
-        String codigoPostal,
-        String localidad,
-        String provincia,
-        String pais, boolean alojado){
-            DireccionDTO nueva_direccion = new DireccionDTO(calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais);
-            HuespedDTO nuevo_huesped = new HuespedDTO(nombre, apellido, tipoDeDocumento, numeroDocumento, posicionFrenteIVA, cuit, telefono, fechaNacimiento, email, ocupacion, nacionalidad, nueva_direccion, alojado);
-            hDAO.guardarOHuespedReemplazando(nuevo_huesped);
+    
+    /**
+     * Da de alta un nuevo huésped en el sistema.
+     * Construye un objeto HuespedDTO con todos los parámetros y lo guarda/reemplaza en el DAO.
+     *
+     * @param nombre Nombre del huésped
+     * @param apellido Apellido del huésped
+     * @param tipoDeDocumento Tipo de documento (DNI, PAS, etc.)
+     * @param numeroDocumento Número del documento
+     * @param posicionFrenteIVA Posición frente al IVA
+     * @param cuit CUIT del huésped
+     * @param telefono Teléfono de contacto
+     * @param fechaNacimiento Fecha de nacimiento
+     * @param email Email de contacto
+     * @param ocupacion Ocupación laboral
+     * @param nacionalidad Nacionalidad
+     * @param calle Calle de la dirección
+     * @param numero Número de la dirección
+     * @param departamento Departamento de la dirección
+     * @param piso Piso de la dirección
+     * @param codigoPostal Código postal
+     * @param localidad Localidad
+     * @param provincia Provincia
+     * @param pais País
+     * @param alojado Indica si el huésped está alojado actualmente
+     */
+    public void DarDeAltaHuesped(String nombre,String apellido,String tipoDeDocumento,
+                                 String numeroDocumento,String posicionFrenteIVA,String cuit,
+                                 String telefono,String fechaNacimiento,String email,
+                                 String ocupacion,String nacionalidad,String calle,
+                                 String numero,String departamento,String piso,
+                                 String codigoPostal,String localidad,String provincia,String pais, boolean alojado){
+        // Construye dirección    
+        DireccionDTO nueva_direccion = new DireccionDTO(calle, numero, departamento, piso, codigoPostal, localidad, provincia, pais);
+        // Construye huésped completo    
+        HuespedDTO nuevo_huesped = new HuespedDTO(nombre, apellido, tipoDeDocumento, numeroDocumento, posicionFrenteIVA, cuit, telefono, fechaNacimiento, email, ocupacion, nacionalidad, nueva_direccion, alojado);
+        // Guardar o reemplazar en DAO    
+        hDAO.guardarOHuespedReemplazando(nuevo_huesped);
     }
 
+    /**
+     * Busca huéspedes en el archivo CSV que coincidan con los parámetros dados.
+     * Muestra resultados numerados y permite seleccionar un huésped para modificar.
+     */
     public void buscarHuesped(String nombre, String apellido, String tipoDocumento, String numeroDocumento, Scanner sc) {
         String rutaLista = "data/ListaHuespedes.csv";
         String rutaEncontrados = "data/huespedesEncontrados.csv";
@@ -141,16 +186,42 @@ public class GestorHuesped {
         }
     }
     
+    /**
+     * Busca un huésped por número de documento usando el DAO.
+     * @param nroDoc número de documento del huésped
+     * @return HuespedDTO encontrado
+     * @throws ExcepcionHuesped si el huésped no existe
+     */
     public HuespedDTO buscarHuesped(String nroDoc) throws ExcepcionHuesped {
     HuespedDTO h = hDAO.buscarHuespedPorDni(nroDoc);
     if (h == null) {
         throw new ExcepcionHuesped("El huésped no existe en el sistema.");
     }
     return h;
-}
-
-
-
+    }
+    
+    /**
+     * Busca un huésped en el sistema según su tipo y número de documento.
+     *
+     * <p>Este método actúa como intermediario entre la capa de negocio y la capa de acceso
+     * a datos, delegando la búsqueda al objeto {@link HuespedDAO}. Permite recuperar
+     * la información completa de un huésped previamente registrado, identificándolo
+     * de forma única mediante la combinación de tipo y número de documento.</p>
+     *
+     * @param tipoDoc el tipo de documento del huésped (por ejemplo, "DNI", "Pasaporte", etc.).
+     * @param nroDoc el número de documento correspondiente al huésped.
+     * @return el objeto {@link HuespedDTO} que coincide con el tipo y número de documento,
+     *         o {@code null} si no se encuentra ningún huésped con esos datos.
+     * @throws ExcepcionHuesped si ocurre un error durante la lectura o búsqueda en la fuente de datos.
+     */
+    public HuespedDTO buscarHuespedPorTipoYNumero(String tipoDoc, String nroDoc) throws ExcepcionHuesped {
+        return huespedDAO.buscarHuespedPorTipoYNumero(tipoDoc, nroDoc);
+    }
+    
+    /**
+     * Permite modificar los datos de un huésped seleccionado de la lista temporal.
+     * Los cambios se reflejan en el archivo principal CSV.
+     */
     public void modificarHuesped(int numeroLinea, Scanner sc) {
         String rutaLista = "data/ListaHuespedes.csv";
         String rutaEncontrados = "data/huespedesEncontrados.csv";
@@ -164,7 +235,6 @@ public class GestorHuesped {
                     listaCompleta.add(linea);
                 }
             }
-
             // Leer archivo de encontrados
             List<String> encontrados = new ArrayList<>();
             try (BufferedReader br2 = new BufferedReader(new FileReader(rutaEncontrados))) {
@@ -173,7 +243,6 @@ public class GestorHuesped {
                     encontrados.add(linea);
                 }
             }
-
             if (numeroLinea < 1 || numeroLinea > encontrados.size()) {
                 System.out.println("Número de línea inválido.");
                 return;
@@ -255,8 +324,19 @@ public class GestorHuesped {
             System.out.println("Error modificando el huésped: " + e.getMessage());
         }
     }
-     public void darBajaHuesped(String tipoDoc, String nroDoc) throws ExcepcionHuesped {
-        var huesped = buscarHuespedPorDni(nroDoc);
+    
+    /**
+     * Da de baja un huésped, si nunca se alojó en el hotel.
+     * @param tipoDoc tipo de documento
+     * @param nroDoc número de documento
+     * @throws ExcepcionHuesped si el huésped se alojó alguna vez
+     */
+    public void darBajaHuesped(String tipoDoc, String nroDoc) throws ExcepcionHuesped {
+        var huesped = buscarHuespedPorTipoYNumero(tipoDoc, nroDoc);
+
+        if (huesped == null) {
+            throw new ExcepcionHuesped("No se encontró ningún huésped con el tipo y número de documento indicados.");
+        }
 
         if (huesped.getAlojadoAlgunaVez()) {
             throw new ExcepcionHuesped("El huésped no puede ser eliminado pues se ha alojado en el hotel en alguna oportunidad.");

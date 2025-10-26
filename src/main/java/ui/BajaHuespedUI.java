@@ -4,23 +4,52 @@ import service.GestorHuesped;
 import exceptions.ExcepcionHuesped;
 import java.util.Scanner;
 
+/**
+ * Clase encargada de la interfaz de usuario para dar de baja un huésped.
+ * Interactúa con el usuario vía consola y utiliza GestorHuesped para
+ * realizar las operaciones de negocio.
+ */
 public class BajaHuespedUI {
+    // Gestor de huéspedes que contiene la lógica de negocio
     private final GestorHuesped gestor;
+    // Scanner para leer entrada por consola
     private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructor que recibe un gestor de huéspedes.
+     *
+     * @param gestor instancia de GestorHuesped para realizar operaciones.
+     */
     public BajaHuespedUI(GestorHuesped gestor) {
         this.gestor = gestor;
     }
 
+    /**
+     * Muestra la pantalla de baja de huésped.
+     * Pide al usuario el tipo y número de documento,
+     * busca el huésped en el sistema y permite eliminarlo.
+     * Maneja los casos en que el huésped no existe o
+     * no puede eliminarse por haber estado alojado.
+     */
     public void mostrarPantallaBaja() {
         System.out.println("=== DAR DE BAJA HUÉSPED ===");
+
         System.out.print("Tipo de documento: ");
-        String tipoDoc = scanner.nextLine().trim();
+        String tipoDoc = scanner.nextLine().trim().toUpperCase();
+        while (tipoDoc.isEmpty()) {
+            System.out.print("Debe ingresar un tipo de documento válido: ");
+            tipoDoc = scanner.nextLine().trim().toUpperCase();
+        }
+
         System.out.print("Número de documento: ");
-        String nroDoc = scanner.nextLine().trim(); // ✅ Se trata como String
+        String nroDoc = scanner.nextLine().trim();
+        while (nroDoc.isEmpty()) {
+            System.out.print("Debe ingresar un número de documento válido: ");
+            nroDoc = scanner.nextLine().trim();
+        }
 
         try {
-            var huesped = gestor.buscarHuespedPorDni(nroDoc); // ✅ coherente con el tipo String
+            var huesped = gestor.buscarHuespedPorTipoYNumero(tipoDoc, nroDoc);
 
             if (huesped == null) {
                 System.out.println("\nNo se encontró ningún huésped con esos datos.");
@@ -40,18 +69,16 @@ public class BajaHuespedUI {
                         + huesped.getNombre() + " " + huesped.getApellido() + ", "
                         + huesped.getTipoDeDocumento() + " " + huesped.getNumeroDocumento()
                         + " han sido eliminados del sistema.");
-                System.out.print("PRESIONE CUALQUIER TECLA PARA CONTINUAR...");
-                scanner.nextLine();
             } else {
                 System.out.println("\nOperación cancelada.");
             }
 
         } catch (ExcepcionHuesped e) {
             System.out.println("\n" + e.getMessage());
-            if (e.getMessage().contains("ha alojado")) {
-                System.out.print("PRESIONE CUALQUIER TECLA PARA CONTINUAR...");
-                scanner.nextLine();
-            }
         }
+
+        System.out.print("PRESIONE CUALQUIER TECLA PARA CONTINUAR...");
+        scanner.nextLine();
     }
+
 }

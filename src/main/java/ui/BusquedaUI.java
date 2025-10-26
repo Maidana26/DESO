@@ -4,8 +4,18 @@ import dao.*;
 import service.*;
 import java.util.Scanner;
 
+/**
+ * Clase de interfaz de usuario para la búsqueda de huéspedes.
+ * Permite al usuario ingresar criterios de búsqueda y luego
+ * acceder a un menú post-búsqueda para modificar o volver al menú principal.
+ */
 public class BusquedaUI {
 
+    /**
+     * Muestra el menú principal de búsqueda de huéspedes.
+     * Permite buscar huéspedes por nombre, apellido, tipo y número de documento.
+     * Después de la búsqueda, llama al menú post-búsqueda.
+     */
     public static void menuBusquedaHuesped() {
         Scanner sc = new Scanner(System.in);
         HuespedDAO dao = new FileHuespedDAO();
@@ -21,6 +31,7 @@ public class BusquedaUI {
             sc.nextLine(); // Consumimos el salto de línea
 
             if (opcion == 1) {
+                // solicita criterios
                 System.out.print("Nombre: ");
                 String nombre = sc.nextLine();
                 System.out.print("Apellido: ");
@@ -29,19 +40,23 @@ public class BusquedaUI {
                 String tipoDoc = sc.nextLine();
                 System.out.print("Número Documento: ");
                 String nroDoc = sc.nextLine();
-
+                // Ejecuta la búsqueda usando el gestor
                 gh.buscarHuesped(nombre, apellido, tipoDoc, nroDoc, sc);
-
                 // Después de la búsqueda, mostramos el menú post-búsqueda
                 menuPostBusqueda(sc);
             }
 
-        } while (opcion != 2);
+        } while (opcion != 2);// Mantener el menú hasta que el usuario decida salir
 
         System.out.println("Saliendo del sistema...");
     }
 
-    // Menú que aparece después de la búsqueda
+     /**
+     * Menú que aparece después de realizar una búsqueda.
+     * Permite modificar un huésped o volver al menú principal.
+     *
+     * @param sc Scanner para leer entrada del usuario
+     */
     private static void menuPostBusqueda(Scanner sc) {
         int opcion = 0;
 
