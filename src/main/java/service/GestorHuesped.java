@@ -4,8 +4,10 @@ import dao.*;
 import java.io.*;
 import java.util.*;
 import models.*;
-import exceptions.ExcepcionHuesped;
-import java.util.Scanner;
+import exceptions.*;
+import ui.*;
+
+
 
 /**
  * GestorHuesped se encarga de manejar la lógica relacionada con
@@ -158,8 +160,9 @@ public class GestorHuesped {
 
             System.out.println("\n--- RESULTADOS DE LA BÚSQUEDA ---");
             if (encontrados.isEmpty()) {
-                System.out.println("No se encontraron huéspedes con esos criterios.");
-                return;
+                DarDeAltaHuespedUI a = new DarDeAltaHuespedUI();
+                System.out.println("No se encontraron huéspedes con esos criterios, se procede a dar de alta huesped");
+                a.darDeAltaHuespedUI(sc);
             }
 
             int index = 1;
@@ -179,7 +182,7 @@ public class GestorHuesped {
             sc.nextLine();
 
             switch (opcion) {
-                case 1:
+                case 1 -> {
                     System.out.print("Ingrese el número del huésped a modificar: ");
                     int seleccion = sc.nextInt();
                     sc.nextLine();
@@ -188,15 +191,15 @@ public class GestorHuesped {
                     } else {
                         System.out.println("Número inválido.");
                     }
-                    break;
+                }
 
-                case 2:
-                    System.out.println("→ Ir a 'Dar de alta huésped' (a implementar)");
-                    // acá después conectás con tu método de alta
-                    break;
+                case 2 -> {
+                    System.out.println("No selecciono ningun huesped, se ejecuta dar de alta huesped");
+                    DarDeAltaHuespedUI a = new DarDeAltaHuespedUI();
+                    a.darDeAltaHuespedUI(sc);
+                }
 
-                default:
-                    System.out.println("Opción no válida.");
+                default -> System.out.println("Opción no válida.");
             }
 
         } catch (IOException e) {
@@ -241,8 +244,10 @@ public class GestorHuesped {
     /**
      * Permite modificar los datos de un huésped seleccionado de la lista temporal.
      * Los cambios se reflejan en el archivo principal CSV.
+     * @param numeroLinea
+     * @param sc
      */
-    public void modificarHuesped(int numeroLinea, Scanner sc) {
+   public void modificarHuesped(int numeroLinea, Scanner sc) {
         String rutaLista = "data/ListaHuespedes.csv";
         String rutaEncontrados = "data/huespedesEncontrados.csv";
         List<String> listaCompleta = new ArrayList<>();
@@ -251,99 +256,252 @@ public class GestorHuesped {
             // Leer archivo completo
             try (BufferedReader br = new BufferedReader(new FileReader(rutaLista))) {
                 String linea;
-                while ((linea = br.readLine()) != null) {
-                    listaCompleta.add(linea);
-                }
+                while ((linea = br.readLine()) != null) listaCompleta.add(linea);
+            } catch (FileNotFoundException fnf) {
+                System.out.println("El archivo principal no existe.");
+                return;
             }
+
             // Leer archivo de encontrados
             List<String> encontrados = new ArrayList<>();
             try (BufferedReader br2 = new BufferedReader(new FileReader(rutaEncontrados))) {
                 String linea;
-                while ((linea = br2.readLine()) != null) {
-                    encontrados.add(linea);
-                }
+                while ((linea = br2.readLine()) != null) encontrados.add(linea);
+            } catch (FileNotFoundException fnf) {
+                System.out.println("No se encontró el archivo de resultados ('huespedesEncontrados.csv').");
+                return;
             }
+
             if (numeroLinea < 1 || numeroLinea > encontrados.size()) {
                 System.out.println("Número de línea inválido.");
                 return;
             }
 
             String lineaSeleccionada = encontrados.get(numeroLinea - 1);
-            String[] partes = lineaSeleccionada.split(",");
+            String[] partes = lineaSeleccionada.split(",", -1); // mantiene campos vacíos
+
+            // Aseguro 20 campos
+            final int EXPECTED = 20;
+            if (partes.length < EXPECTED) {
+                String[] tmp = new String[EXPECTED];
+                for (int i = 0; i < EXPECTED; i++) tmp[i] = (i < partes.length) ? partes[i] : "";
+                partes = tmp;
+            }
 
             System.out.println("\n--- MODIFICAR HUÉSPED ---");
             System.out.println("Dejar vacío para mantener el valor actual.");
 
-            System.out.print("Nombre (" + partes[0] + "): ");
-            String nombre = sc.nextLine().trim();
-            if (nombre.isEmpty()) nombre = partes[0];
+            // Inicializo valores actuales (trim para seguridad)
+            String nombre = partes[0].trim();
+            String apellido = partes[1].trim();
+            String tipoDoc = partes[2].trim();
+            String nroDoc = partes[3].trim();
+            String posIVA = partes[4].trim();
+            String cuit = partes[5].trim();
+            String telefono = partes[6].trim();
+            String fechaNac = partes[7].trim();
+            String email = partes[8].trim();
+            String ocupacion = partes[9].trim();
+            String nacionalidad = partes[10].trim();
+            String calle = partes[11].trim();
+            String numeroCalle = partes[12].trim();
+            String departamento = partes[13].trim();
+            String piso = partes[14].trim();
+            String codigoPostal = partes[15].trim();
+            String localidad = partes[16].trim();
+            String provincia = partes[17].trim();
+            String pais = partes[18].trim();
+            String alojado = partes[19].trim();
 
-            System.out.print("Apellido (" + partes[1] + "): ");
-            String apellido = sc.nextLine().trim();
-            if (apellido.isEmpty()) apellido = partes[1];
+            // 1) Nombre (obligatorio)
+            nombre = pedirCampo(sc, nombre, "Nombre", util.ValidadorHuesped::validarNombre, true);
 
-            System.out.print("Tipo Documento (" + partes[2] + "): ");
-            String tipoDoc = sc.nextLine().trim();
-            if (tipoDoc.isEmpty()) tipoDoc = partes[2];
+            // 2) Apellido (obligatorio)
+            apellido = pedirCampo(sc, apellido, "Apellido", util.ValidadorHuesped::validarApellido, true);
 
-            System.out.print("Número Documento (" + partes[3] + "): ");
-            String nroDoc = sc.nextLine().trim();
-            if (nroDoc.isEmpty()) nroDoc = partes[3];
+            // 3) Tipo de documento (obligatorio)
+            tipoDoc = pedirCampo(sc, tipoDoc, "Tipo Documento [DNI/LE/LC/Pasaporte]", util.ValidadorHuesped::validarTipoDocumento, true);
 
-            System.out.print("Posición frente al IVA (" + partes[4] + "): ");
-            String posIVA = sc.nextLine().trim();
-            if (posIVA.isEmpty()) posIVA = partes[4];
+            // 4) Número de documento (obligatorio) + duplicado
+            while (true) {
+                String entrada = pedirCampo(sc, nroDoc, "Número Documento (8 dígitos)", util.ValidadorHuesped::validarNumeroDocumento, true);
+                // si volverá a pedir y entrada es la misma que actual, queda
+                nroDoc = entrada;
 
-            System.out.print("CUIT (" + partes[5] + "): ");
-            String cuit = sc.nextLine().trim();
-            if (cuit.isEmpty()) cuit = partes[5];
+                // Copias finales para lambda
+                final String nroDocFinal = nroDoc;
+                final String lineaSeleccionadaFinal = lineaSeleccionada;
 
-            System.out.print("Teléfono (" + partes[6] + "): ");
-            String telefono = sc.nextLine().trim();
-            if (telefono.isEmpty()) telefono = partes[6];
+                boolean existe = listaCompleta.stream()
+                        .anyMatch(l -> {
+                            String[] d = l.split(",", -1);
+                            return d.length > 3 && d[3].trim().equals(nroDocFinal) && !l.equals(lineaSeleccionadaFinal);
+                        });
 
-            System.out.print("Fecha (" + partes[7] + "): ");
-            String fecha = sc.nextLine().trim();
-            if (fecha.isEmpty()) fecha = partes[7];
-
-            System.out.print("Email (" + partes[8] + "): ");
-            String email = sc.nextLine().trim();
-            if (email.isEmpty()) email = partes[8];
-
-            System.out.print("Ocupación (" + partes[9] + "): ");
-            String ocupacion = sc.nextLine().trim();
-            if (ocupacion.isEmpty()) ocupacion = partes[9];
-
-            System.out.print("Nacionalidad (" + partes[10] + "): ");
-            String nacionalidad = sc.nextLine().trim();
-            if (nacionalidad.isEmpty()) nacionalidad = partes[10];
-
-            // Reconstruir la línea
-            String lineaModificada = String.join(",", nombre, apellido, tipoDoc, nroDoc, posIVA, cuit, telefono, fecha, email, ocupacion, nacionalidad);
-
-            // Actualizar lista completa
-            for (int i = 0; i < listaCompleta.size(); i++) {
-                String l = listaCompleta.get(i);
-                if (l.equals(lineaSeleccionada)) {
-                    listaCompleta.set(i, lineaModificada);
+                if (existe) {
+                    System.out.println("ATENCIÓN: Ese número de documento ya existe en el sistema.");
+                    System.out.println("1) Continuar con este DNI (aceptar duplicado)");
+                    System.out.println("2) Reingresar DNI");
+                    System.out.print("Opción: ");
+                    String opt = sc.nextLine().trim();
+                    if (opt.equals("1")) {
+                        break;
+                    } else {
+                        // loop para reingresar
+                        continue;
+                    }
+                } else {
                     break;
                 }
             }
 
-            // Guardar cambios en ListaHuespedes.csv
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(rutaLista))) {
-                for (String l : listaCompleta) {
-                    bw.write(l);
-                    bw.newLine();
+            // 5) Posición frente al IVA (obligatorio)
+            posIVA = pedirCampo(sc, posIVA, "Posición frente al IVA", util.ValidadorHuesped::validarPosicionFrenteIVA, true);
+
+            // 6) CUIT (opcional: vacío o 11 dígitos)
+            cuit = pedirCampo(sc, cuit, "CUIT (11 dígitos o vacío)", util.ValidadorHuesped::validarCUIT, false);
+
+            // 7) Teléfono (obligatorio)
+            telefono = pedirCampo(sc, telefono, "Teléfono (7-15 dígitos)", util.ValidadorHuesped::validarTelefono, true);
+
+            // 8) Fecha de nacimiento (obligatorio dd/mm/aaaa)
+            fechaNac = pedirCampo(sc, fechaNac, "Fecha de Nacimiento (dd/mm/aaaa)", util.ValidadorHuesped::validarFecha, true);
+
+            // 9) Email (opcional)
+            email = pedirCampo(sc, email, "Email", util.ValidadorHuesped::validarEmail, false);
+
+            // 10) Ocupación (obligatorio)
+            ocupacion = pedirCampo(sc, ocupacion, "Ocupación", util.ValidadorHuesped::validarOcupacion, true);
+
+            // 11) Nacionalidad (obligatorio)
+            nacionalidad = pedirCampo(sc, nacionalidad, "Nacionalidad", util.ValidadorHuesped::validarNacionalidad, true);
+
+            // 12) Calle (obligatorio)
+            calle = pedirCampo(sc, calle, "Calle", util.ValidadorHuesped::validarCalle, true);
+
+            // 13) Número de calle (obligatorio numeric)
+            numeroCalle = pedirCampo(sc, numeroCalle, "Número de calle", util.ValidadorHuesped::validarNumero, true);
+
+            // 14) Departamento (opcional)
+            departamento = pedirCampo(sc, departamento, "Departamento", util.ValidadorHuesped::validarDepartamento, false);
+
+            // 15) Piso (opcional)
+            piso = pedirCampo(sc, piso, "Piso", util.ValidadorHuesped::validarPiso, false);
+
+            // 16) Código Postal (obligatorio)
+            codigoPostal = pedirCampo(sc, codigoPostal, "Código Postal", util.ValidadorHuesped::validarCodigoPostal, true);
+
+            // 17) Localidad (obligatorio)
+            localidad = pedirCampo(sc, localidad, "Localidad", util.ValidadorHuesped::validarLocalidad, true);
+
+            // 18) Provincia (obligatorio)
+            provincia = pedirCampo(sc, provincia, "Provincia", util.ValidadorHuesped::validarProvincia, true);
+
+            // 19) País (obligatorio)
+            pais = pedirCampo(sc, pais, "País", util.ValidadorHuesped::validarPais, true);
+
+            // 20) Alojado (0/1) obligatorio
+            while (true) {
+                System.out.print("Se alojo (0 = No, 1 = Si) [" + (alojado.isEmpty() ? "-" : alojado) + "]: ");
+                String in = sc.nextLine().trim();
+                if (in.isEmpty()) {
+                    if (alojado == null || alojado.isEmpty()) {
+                        System.out.println("Debe indicar 0 o 1.");
+                        continue;
+                    }
+                    break;
+                }
+                if (in.equals("0") || in.equals("1")) {
+                    alojado = in;
+                    break;
+                } else {
+                    System.out.println("Ingrese 0 o 1.");
                 }
             }
 
-            System.out.println("\nLa operación ha culminado con éxito.");
+            // Reconstruir línea modificada
+            String lineaModificada = String.join(",", Arrays.asList(
+                    nombre, apellido, tipoDoc, nroDoc, posIVA, cuit, telefono, fechaNac, email, ocupacion,
+                    nacionalidad, calle, numeroCalle, departamento, piso, codigoPostal, localidad, provincia, pais, alojado
+            ));
+
+            // Menú final (switch)
+            System.out.println("\nOpciones:");
+            System.out.println("1) Confirmar modificación");
+            System.out.println("2) Cancelar modificación");
+            System.out.println("3) Borrar huésped");
+            System.out.print("Opción: ");
+            String optFinal = sc.nextLine().trim();
+            switch (optFinal) {
+                case "1" -> {
+                    // Reemplazo la primera ocurrencia exacta de la línea original
+                    boolean reemplazado = false;
+                    for (int i = 0; i < listaCompleta.size(); i++) {
+                        if (listaCompleta.get(i).equals(lineaSeleccionada)) {
+                            listaCompleta.set(i, lineaModificada);
+                            reemplazado = true;
+                            break;
+                        }
+                    }
+                    if (reemplazado) {
+                        try (BufferedWriter bw = new BufferedWriter(new FileWriter(rutaLista))) {
+                            for (String l : listaCompleta) {
+                                bw.write(l);
+                                bw.newLine();
+                            }
+                        }
+                        System.out.println("Modificación guardada correctamente.");
+                    } else {
+                        System.out.println("No se encontró la línea original para reemplazar.");
+                    }
+                }
+
+                case "2" -> System.out.println("Modificación cancelada. No se realizaron cambios.");
+
+                case "3" -> {
+                    System.out.println("Llamando a la función de dar de baja huesped");
+                    var huespedDAO = new FileHuespedDAO();
+                    var gestorHuesped = new GestorHuesped(huespedDAO);
+                    var ui = new BajaHuespedUI(gestorHuesped);
+                    ui.mostrarPantallaBaja();
+                }
+
+                default -> System.out.println("Opción inválida. No se realizaron cambios.");
+            }
 
         } catch (IOException e) {
             System.out.println("Error modificando el huésped: " + e.getMessage());
         }
     }
+
+/**
+ * Función auxiliar: pide un campo con validación.
+ *
+ * @param sc Scanner
+ * @param valorActual valor actual del campo (si el usuario deja vacío se conserva)
+ * @param etiqueta texto a mostrar al pedir el campo
+ * @param validador Predicate<String> que devuelve true si el valor es válido
+ * @param obligatorio si true, no acepta valor vacío
+ * @return valor final válido
+ */
+private String pedirCampo(Scanner sc, String valorActual, String etiqueta,
+                          java.util.function.Predicate<String> validador, boolean obligatorio) {
+    while (true) {
+        System.out.print(etiqueta + " (" + (valorActual == null || valorActual.isEmpty() ? "-" : valorActual) + "): ");
+        String entrada = sc.nextLine().trim();
+        if (entrada.isEmpty()) {
+            if (obligatorio && (valorActual == null || valorActual.isEmpty())) {
+                System.out.println(etiqueta + " es obligatorio.");
+                continue;
+            }
+            return (valorActual == null) ? "" : valorActual;
+        }
+        if (validador.test(entrada)) return entrada;
+        // si no pasa validación, el validador ya imprime el mensaje de error
+    }
+}
+
+
     
     /**
      * Da de baja un huésped, si nunca se alojó en el hotel.
