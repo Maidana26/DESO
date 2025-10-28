@@ -74,7 +74,7 @@ public class Main {
         if(LoginUI.mostrarPantallaLogin()){
             int opcion;
             do {
-                System.out.println("\n===== MENU PRINCIPAL =====");
+                System.out.println("===== MENU PRINCIPAL =====");
                 System.out.println("1. Dar de alta huesped");
                 System.out.println("2. Dar de baja huesped");
                 System.out.println("3. Buscar huesped");
@@ -94,10 +94,6 @@ public class Main {
             } while (opcion != 4);
 
             sc.close();
-        }else{
-            System.out.println("jajajajaja no entraste bobo");
         }
-
-        
     }
 }

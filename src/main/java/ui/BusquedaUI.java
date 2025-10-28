@@ -62,7 +62,7 @@ public class BusquedaUI {
 
         do {
             System.out.println("\n----- MENU POST BÚSQUEDA -----");
-            System.out.println("1- Modificar huésped");
+            System.out.println("1- Buscar Huesped");
             System.out.println("2- Volver al menú principal");
             System.out.print("Ingrese una opción: ");
 

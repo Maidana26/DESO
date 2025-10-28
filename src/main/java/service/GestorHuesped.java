@@ -125,15 +125,14 @@ public class GestorHuesped {
         try (BufferedReader br = new BufferedReader(new FileReader(rutaLista))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                String[] partes = linea.split(",");
-                if (partes.length < 11) continue;
+                String[] partes = linea.split(",", -1); // <-- mantiene todas las columnas
+                if (partes.length < 19) continue;
 
                 String hNombre = partes[0].trim();
                 String hApellido = partes[1].trim();
                 String hTipoDoc = partes[2].trim();
                 String hNumeroDoc = partes[3].trim();
 
-                // Normalizamos los parámetros
                 String nombreParam = nombre == null ? "" : nombre.trim();
                 String apellidoParam = apellido == null ? "" : apellido.trim();
                 String tipoDocParam = tipoDocumento == null ? "" : tipoDocumento.trim();
@@ -150,7 +149,6 @@ public class GestorHuesped {
                 }
             }
 
-            // Guardar resultados en huespedesEncontrados.csv
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(rutaEncontrados))) {
                 for (String l : encontrados) {
                     bw.write(l);
@@ -158,33 +156,55 @@ public class GestorHuesped {
                 }
             }
 
-            // Mostrar resultados numerados
             System.out.println("\n--- RESULTADOS DE LA BÚSQUEDA ---");
             if (encontrados.isEmpty()) {
                 System.out.println("No se encontraron huéspedes con esos criterios.");
-            } else {
-                int index = 1;
-                for (String l : encontrados) {
-                    System.out.println(index + " - " + l);
-                    index++;
+                return;
+            }
+
+            int index = 1;
+            for (String l : encontrados) {
+                String[] partes = l.split(",", -1);
+                if (partes.length >= 4) {
+                    System.out.println(index + " - " + partes[0] + " " + partes[1] + " - " + partes[2] + " " + partes[3]);
                 }
-                System.out.println("\nBúsqueda finalizada. Resultados guardados en 'huespedesEncontrados.csv'.");
-                
-                // Menú post-búsqueda para seleccionar huésped a modificar
-                System.out.print("\nIngrese el número del huésped a modificar (0 para cancelar): ");
-                int seleccion = sc.nextInt();
-                sc.nextLine(); // Consumir salto de línea
-                if (seleccion > 0 && seleccion <= encontrados.size()) {
-                    modificarHuesped(seleccion, sc);
-                } else {
-                    System.out.println("Modificación cancelada.");
-                }
+                index++;
+            }
+
+            System.out.println("\nSeleccione una opción:");
+            System.out.println("1. Modificar huésped");
+            System.out.println("2. Siguiente");
+            System.out.print("Opción: ");
+            int opcion = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    System.out.print("Ingrese el número del huésped a modificar: ");
+                    int seleccion = sc.nextInt();
+                    sc.nextLine();
+                    if (seleccion > 0 && seleccion <= encontrados.size()) {
+                        modificarHuesped(seleccion, sc);
+                    } else {
+                        System.out.println("Número inválido.");
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("→ Ir a 'Dar de alta huésped' (a implementar)");
+                    // acá después conectás con tu método de alta
+                    break;
+
+                default:
+                    System.out.println("Opción no válida.");
             }
 
         } catch (IOException e) {
             System.out.println("Error leyendo o escribiendo archivos: " + e.getMessage());
         }
     }
+
+
     
     /**
      * Busca un huésped por número de documento usando el DAO.

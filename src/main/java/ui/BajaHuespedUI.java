@@ -52,29 +52,29 @@ public class BajaHuespedUI {
             var huesped = gestor.buscarHuespedPorTipoYNumero(tipoDoc, nroDoc);
 
             if (huesped == null) {
-                System.out.println("\nNo se encontró ningún huésped con esos datos.");
-                System.out.print("PRESIONE CUALQUIER TECLA PARA CONTINUAR...");
+                System.out.println("No se encontró ningún huésped con esos datos.");
+                System.out.println("PRESIONE CUALQUIER TECLA PARA CONTINUAR...");
                 scanner.nextLine();
                 return;
             }
 
-            System.out.println("\nSe encontró el siguiente huésped:");
+            System.out.println("Se encontró el siguiente huésped:");
             System.out.println("→ " + huesped.getNombre() + " " + huesped.getApellido());
-            System.out.print("\n¿Desea eliminar este huésped del sistema? [E]liminar / [C]ancelar: ");
+            System.out.println("¿Desea eliminar este huésped del sistema? [E]liminar / [C]ancelar: ");
             String opcion = scanner.nextLine().trim().toUpperCase();
 
             if (opcion.equals("E")) {
                 gestor.darBajaHuesped(tipoDoc, nroDoc);
-                System.out.println("\nLos datos del huésped "
+                System.out.println("Los datos del huésped "
                         + huesped.getNombre() + " " + huesped.getApellido() + ", "
                         + huesped.getTipoDeDocumento() + " " + huesped.getNumeroDocumento()
                         + " han sido eliminados del sistema.");
             } else {
-                System.out.println("\nOperación cancelada.");
+                System.out.println("Operación cancelada.");
             }
 
         } catch (ExcepcionHuesped e) {
-            System.out.println("\n" + e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         System.out.print("PRESIONE CUALQUIER TECLA PARA CONTINUAR...");
