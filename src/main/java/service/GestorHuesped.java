@@ -171,10 +171,10 @@ public class GestorHuesped {
                 index++;
             }
 
-            System.out.println("\nSeleccione una opción:");
+            System.out.println("Seleccione una opción:");
             System.out.println("1. Modificar huésped");
             System.out.println("2. Siguiente");
-            System.out.print("Opción: ");
+            System.out.println("Opción: ");
             int opcion = sc.nextInt();
             sc.nextLine();
 

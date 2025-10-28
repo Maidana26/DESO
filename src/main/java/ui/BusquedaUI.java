@@ -42,8 +42,6 @@ public class BusquedaUI {
                 String nroDoc = sc.nextLine();
                 // Ejecuta la búsqueda usando el gestor
                 gh.buscarHuesped(nombre, apellido, tipoDoc, nroDoc, sc);
-                // Después de la búsqueda, mostramos el menú post-búsqueda
-                menuPostBusqueda(sc);
             }
 
         } while (opcion != 2);// Mantener el menú hasta que el usuario decida salir
@@ -57,7 +55,7 @@ public class BusquedaUI {
      *
      * @param sc Scanner para leer entrada del usuario
      */
-    private static void menuPostBusqueda(Scanner sc) {
+    /*private static void menuPostBusqueda(Scanner sc) {
         int opcion = 0;
 
         do {
@@ -81,5 +79,5 @@ public class BusquedaUI {
             }
 
         } while (opcion != 2);
-    }
+    }*/
 }

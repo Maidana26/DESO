@@ -6,7 +6,7 @@ Carla,Rodríguez,LC,20987654,Consumidor Final,,3815674432,11/03/1990,,Ingeniera,
 Pablo,Martínez,Pasaporte,76543210,Monotributista,,1165567890,30/06/1995,pablo.martinez@gmail.com,Arquitecto,Uruguaya,Artigas,900,,,1180,Montevideo,Montevideo,Uruguay,1
 Diego,Torres,DNI,29876543,Responsable Inscripto,23-29876543-2,1167789900,03/08/1982,diego.torres@outlook.com,Comerciante,Argentina,San Juan,876,,,3100,Paraná,Entre Ríos,Argentina,1
 Laura,Giménez,LC,18765439,Exento,,1165437890,25/10/1978,laura.gimenez@gmail.com,Artista,Argentina,Catamarca,1450,,,4400,Salta,Salta,Argentina,0
-Joaquin,Sanchez,DNI,45414960,Exento,20454149603,3425344245,19/11/2003,joacco1911@gmail.com,Estudiante,Argentina,Beruti,1940,,,3000,Santa Fe,Santa Fe,Argentina,1
+Joaquin,Sanchez,DNI,45414960,Exento,20454149603,3425344245,19/11/2003,joacco1911@gmail.com,Estudiante,Argentina
 Sofía,Ramírez,Pasaporte,A1234567,Monotributista,,1145567789,12/12/1990,sofia.ramirez@mail.com,Ingeniera,Argentina,Libertad,500,,,1700,Buenos Aires,Buenos Aires,Argentina,1
 Federico,Alonso,DNI,39876512,Responsable Inscripto,20-39876512-3,1163345567,01/05/1985,federico.alonso@gmail.com,Contador,Argentina,San Martín,320,,,5500,Córdoba,Córdoba,Argentina,0
 Valentina,Fernández,LC,21987654,Consumidor Final,,3813345567,23/07/1993,valentina.fernandez@gmail.com,Abogada,Argentina,Belgrano,145,,,5000,Rosario,Santa Fe,Argentina,1
@@ -16,4 +16,4 @@ Lucas,Rojas,DNI,36547891,Responsable Inscripto,27-36547891-2,1167789901,20/08/19
 Marta,Vega,LC,19876543,Exento,,1165437891,18/11/1980,marta.vega@gmail.com,Artista,Argentina,Catamarca,1600,,,4400,Salta,Salta,Argentina,0
 Sebastián,Cabrera,LE,28765498,Consumidor Final,20-28765498-3,1165561234,09/09/1988,sebastian.cabrera@gmail.com,Comerciante,Argentina,Rivadavia,600,,,4000,San Miguel de Tucumán,Tucumán,Argentina,1
 Julieta,Domínguez,Pasaporte,C3456789,Monotributista,,1145569900,02/01/1992,julieta.dominguez@yahoo.com,Freelancer,Argentina,Belgrano,234,,,7600,Mar del Plata,Buenos Aires,Argentina,1
-8888,Maidana,DNI,45017033,Exento,,3492616062,26/05/2004,,Estudiante,Argentina
+
