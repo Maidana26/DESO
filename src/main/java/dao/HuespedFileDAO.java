@@ -13,10 +13,6 @@ import java.util.List;
 
 public class HuespedFileDAO implements HuespedDAO {
     
-    public void HuespedFileDAO(){
-        
-    }
-    
     private static final String RUTA_ARCHIVO = "data/ListaHuespedes.csv";
     
     @Override
@@ -56,49 +52,44 @@ public class HuespedFileDAO implements HuespedDAO {
     }
     
     // ✅ Busca un huésped por DNI y devuelve su instancia, o null si no existe
+    @Override
     public HuespedDTO buscarHuespedPorDni(String dniBuscado) {
         try (BufferedReader br = new BufferedReader(new FileReader(RUTA_ARCHIVO))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] datos = linea.split(",");
-                if (datos.length < 19) continue; // evita errores por líneas incompletas
-                
-                String dni = datos[3].trim(); // el campo 4 es el DNI
+            return br.lines() // Stream<String>
+                    .map(linea -> linea.split(",")) // Stream<String[]>
+                    .filter(campos -> campos.length > 3 && campos[3].equals(dniBuscado)) // filtro por DNI
+                    .findFirst() // devuelve el primero que cumpla
+                    .map(datos -> { // convierte a HuespedDTO
+                        HuespedDTO h = new HuespedDTO();
+                        h.setNombre(datos[0].trim());
+                        h.setApellido(datos[1].trim());
+                        h.setTipoDeDocumento(datos[2].trim());
+                        h.setNumeroDocumento(datos[3].trim());
+                        h.setPosicionFrenteIVA(datos[4].trim());
+                        h.setCuit(datos[5].trim());
+                        h.setTelefono(datos[6].trim());
+                        h.setFechaNacimiento(datos[7].trim());
+                        h.setEmail(datos[8].trim());
+                        h.setOcupacion(datos[9].trim());
+                        h.setNacionalidad(datos[10].trim());
 
-                if (dni.equals(dniBuscado)) {
-                    // Crear y retornar el HuespedDTO con todos los datos
-                    HuespedDTO huesped = new HuespedDTO();
-                    huesped.setNombre(datos[0].trim());
-                    huesped.setApellido(datos[1].trim());
-                    huesped.setTipoDeDocumento(datos[2].trim());
-                    huesped.setNumeroDocumento(datos[3].trim());
-                    huesped.setPosicionFrenteIVA(datos[4].trim());
-                    huesped.setCuit(datos[5].trim());
-                    huesped.setTelefono(datos[6].trim());
-                    huesped.setFechaNacimiento(datos[7].trim());
-                    huesped.setEmail(datos[8].trim());
-                    huesped.setOcupacion(datos[9].trim());
-                    huesped.setNacionalidad(datos[10].trim());
-                    
-                    DireccionDTO direccion = new DireccionDTO();
-                    direccion.setCalle(datos[11].trim());
-                    direccion.setNumero(datos[12].trim());
-                    direccion.setDepartamento(datos[13].trim());
-                    direccion.setPiso(datos[14].trim());
-                    direccion.setCodigoPostal(datos[15].trim());
-                    direccion.setLocalidad(datos[16].trim());
-                    direccion.setProvincia(datos[17].trim());
-                    direccion.setPais(datos[18].trim());
-                   
-                    huesped.setDireccion(direccion);
-                    
-                    return huesped;
-                }
-            }
+                        DireccionDTO d = new DireccionDTO();
+                        d.setCalle(datos[11].trim());
+                        d.setNumero(datos[12].trim());
+                        d.setDepartamento(datos[13].trim());
+                        d.setPiso(datos[14].trim());
+                        d.setCodigoPostal(datos[15].trim());
+                        d.setLocalidad(datos[16].trim());
+                        d.setProvincia(datos[17].trim());
+                        d.setPais(datos[18].trim());
+                        h.setDireccion(d);
+                        return h;
+                    })
+                    .orElse(null); // si no lo encuentra
         } catch (IOException e) {
-            System.out.println("❌ Error al leer el archivo CSV: " + e.getMessage());
+            System.err.println("❌ Error al leer archivo CSV: " + e.getMessage());
+            return null;
         }
-        return null; // no se encontró
     }
     
     @Override
